@@ -2,10 +2,10 @@ import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-void main() => runApp(const MyApp());
+void main() => runApp(MyApp());
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key key}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   MyAppState createState() => MyAppState();
@@ -97,20 +97,94 @@ class MyAppState extends State<MyApp> {
           title: const Text('CountryPicker Example'),
         ),
         body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              CountryCodePicker(
-                onChanged: print,
-                // Initial selection and favorite can be one of code ('IT') OR dial_code('+39')
-                initialSelection: 'IT',
-                favorite: const ['+39', 'FR'],
-                countryFilter: const ['IT', 'FR'],
-                showFlagDialog: false,
-                comparator: (a, b) => b.name.compareTo(a.name),
-                //Get the country information relevant to the initial selection
-                onInit: (code) => debugPrint(
-                    "on init ${code.name} ${code.dialCode} ${code.name}"),
+          child: ListView(
+            physics: const NeverScrollableScrollPhysics(),
+            padding: EdgeInsets.symmetric(horizontal: 18, vertical: 18),
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      width: 250,
+                      decoration: ShapeDecoration(
+                        color: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          side: const BorderSide(
+                              width: 1, color: Color(0xFF777777)),
+                          borderRadius: BorderRadius.circular(72),
+                        ),
+                      ),
+                      child: Center(
+                        child: CountryCodePicker(
+                          padding: EdgeInsets.zero,
+                          onChanged: print,
+                          // Initial selection and favorite can be one of code ('IT') OR dial_code('+39')
+                          initialSelection: 'IT',
+                          favorite: const ['+39', 'FR'],
+                          countryFilter: const ['IT', 'FR'],
+                          showFlagDialog: false,
+                          showDropDownButton: true,
+                          comparator: (a, b) => b.name!.compareTo(a.name!),
+                          //Get the country information relevant to the initial selection
+                          onInit: (code) => debugPrint(
+                              "on init ${code!.name} ${code.dialCode} ${code.name}"),
+                          flagDecoration: ShapeDecoration(
+                            color: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    flex: 2,
+                    child: TextFormField(
+                      key: Key('phoneNumberTextFormField'),
+                      keyboardType: TextInputType.phone,
+                      textAlign: TextAlign.left,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.only(
+                          left: 18,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(72),
+                          borderSide:
+                              BorderSide(width: 1, color: Color(0xFF777777)),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(72),
+                          borderSide:
+                              BorderSide(width: 1, color: Color(0xFF777777)),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(72),
+                          borderSide:
+                              BorderSide(width: 1, color: Color(0xFF777777)),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(72),
+                          borderSide: BorderSide(width: 1, color: Colors.red),
+                        ),
+                        filled: true,
+                        hintStyle: TextStyle(color: Colors.grey[800]),
+                        fillColor: Colors.white,
+                      ),
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return "Phone can not be empty";
+                        } else if (value.trim().length != 11) {
+                          return "Phone number are fix 11 characters ";
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                  ),
+                ],
               ),
               CountryCodePicker(
                 onChanged: print,
